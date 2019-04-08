@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
-import CartItem from './CartItem';
+import CartItemsList from './CartItemsList';
+import {connect} from 'react-redux'
 
 class Cart extends Component {
   render() {
-    let listOfCartItems = this.props.booksInCart.map(item=><CartItem key={item.id} item={item} removeBookFromCart={this.props.removeBookFromCart}/>)
-    let theTotal = this.props.booksInCart.reduce((total,item)=> total + item.price,0)
-    return (
-        <div> {listOfCartItems}
-        Total: {theTotal}</div>
+    let booksInCart = this.props.books.filter(book=>book.inCart)
+
+    // let listOfCartItems = this.props.booksInCart.map(item=><CartItem key={item.id} item={item} removeBookFromCart={this.props.removeBookFromCart}/>)
+    let theTotal = booksInCart.filter(book=> book.inCart).reduce((total,book)=> total + book.price,0)
+     return (
+    //     <div> {listOfCartItems}
+    //     Total: {theTotal}</div>
+    <div><CartItemsList cartItems={booksInCart}/>
+      Total: {theTotal}
+      </div>
     )
   }
 }
 
-export default Cart;
+const mapStateToProps = state =>({
+  books:state.books
+})
+export default connect(mapStateToProps)(Cart);
